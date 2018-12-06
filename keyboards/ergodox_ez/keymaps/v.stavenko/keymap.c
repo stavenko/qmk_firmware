@@ -2,71 +2,124 @@
 #include "version.h"
 
 #define BASE 0 // default layer
-#define SYMB 1 // symbols
-#define MDIA 2 // media keys
+#define RUSSIAN 1
+#define SYMB 2 // symbols
+#define MDIA 3 // media keys
+#define NAVI 4 // Navigation layer
+
+enum {
+  QUOTES_DBLQUOTES,
+  SLASH_BACKSLASH
+};
 
 enum custom_keycodes {
   EPRM = SAFE_RANGE,
   VRSN,
-  RGB_SLD
+  RGB_SLD,
+  SWITCH_RUSSIAN,
+  SWITCH_ENGLISH,
+  RSIGNS
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Keymap 0: Basic layer
  *
- * ,--------------------------------------------------.           ,--------------------------------------------------.
- * |   =    |   1  |   2  |   3  |   4  |   5  | LEFT |           | RIGHT|   6  |   7  |   8  |   9  |   0  |   -    |
- * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
- * | Del    |   Q  |   W  |   E  |   R  |   T  |  L1  |           |  L1  |   Y  |   U  |   I  |   O  |   P  |   \    |
- * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
- * | BkSp   |   A  |   S  |   D  |   F  |   G  |------|           |------|   H  |   J  |   K  |   L  |; / L2|' / Cmd |
- * |--------+------+------+------+------+------| Hyper|           | Meh  |------+------+------+------+------+--------|
- * | LShift |Z/Ctrl|   X  |   C  |   V  |   B  |      |           |      |   N  |   M  |   ,  |   .  |//Ctrl| RShift |
- * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
- *   |Grv/L1|  '"  |AltShf| Left | Right|                                       |  Up  | Down |   [  |   ]  | ~L1  |
- *   `----------------------------------'                                       `----------------------------------'
- *                                        ,-------------.       ,-------------.
- *                                        | App  | LGui |       | Alt  |Ctrl/Esc|
+ * ,----------------------------------------------------.       ,--------------------------------------------------.
+ * |   =    |   1  |   2  |   3  |   4  |   5  | SW_RUS |       |  SW_ENG |   6  |   7  |   8  |   9  |   0  |   -    |
+ * |--------+------+------+------+------+---------------|       |---------+------+------+------+------+------+--------|
+ * |        |   Q  |   W  |   E  |   R  |   T  |        |       |         |   Y  |   U  |   I  |   O  |   P  |   \    |
+ * |--------+------+------+------+------+------|        |       |         |------+------+------+------+------+--------|
+ * | -> NAV |   A  |   S  |   D  |   F  |   G  |--------|       |---------|   H  |   J  |   K  |   L  |; / L2|' / Cmd |
+ * |--------+------+------+------+------+------| Hyper  |       |   Meh   |------+------+------+------+------+--------|
+ * | LShift |Z/Ctrl|   X  |   C  |   V  |   B  |        |       |         |   N  |   M  |   ,  |   .  |//Ctrl| RShift |
+ * `--------+------+------+------+------+---------------'       `-------------+------+------+------+------+--------'
+ *   |LGUI  | LALT |AltShf| Left | esc  |                                     |  Up  | Down |   [  | RALT | RGUI |
+ *   `----------------------------------'                                     `----------------------------------'
+ *                                        ,-------------.       ,---------------
+ *                                        | App  | LGui |       | Alt  |  Esc   |
  *                                 ,------|------|------|       |------+--------+------.
  *                                 |      |      | Home |       | PgUp |        |      |
  *                                 | Space|Backsp|------|       |------|  Tab   |Enter |
- *                                 |      |ace   | End  |       | PgDn |        |      |
+ *                                 |      |ace   |->Symb|       |->Symb|        |      |
+ *                                 |      |      |      |       |      |        |      |
  *                                 `--------------------'       `----------------------'
  */
 // If it accepts an argument (i.e, is a function), it doesn't need KC_.
 // Otherwise, it needs KC_*
 [BASE] = LAYOUT_ergodox(  // layer 0 : default
         // left hand
-        KC_EQL,         KC_1,         KC_2,   KC_3,   KC_4,   KC_5,   KC_LEFT,
-        KC_DELT,        KC_Q,         KC_W,   KC_E,   KC_R,   KC_T,   TG(SYMB),
-        KC_BSPC,        KC_A,         KC_S,   KC_D,   KC_F,   KC_G,
+        KC_EQL,         KC_1,         KC_2,   KC_3,   KC_4,   KC_5,   SWITCH_RUSSIAN,
+        KC_NO,        KC_Q,         KC_W,   KC_E,   KC_R,   KC_T,   KC_NO /*TG(SYMB)*/,
+        MO(NAVI),        KC_A,         KC_S,   KC_D,   KC_F,   KC_G,
         KC_LSFT,        CTL_T(KC_Z),  KC_X,   KC_C,   KC_V,   KC_B,   ALL_T(KC_NO),
-        LT(SYMB,KC_GRV),KC_QUOT,      LALT(KC_LSFT),  KC_LEFT,KC_RGHT,
+        KC_LGUI,KC_LALT,      LALT(KC_LSFT),  KC_LEFT, KC_ESC,
                                               ALT_T(KC_APP),  KC_LGUI,
                                                               KC_HOME,
-                                               KC_SPC,KC_BSPC,KC_END,
+                                               KC_SPC,KC_BSPC,MO(SYMB),
         // right hand
-             KC_RGHT,     KC_6,   KC_7,  KC_8,   KC_9,   KC_0,             KC_MINS,
-             TG(SYMB),    KC_Y,   KC_U,  KC_I,   KC_O,   KC_P,             KC_BSLS,
-                          KC_H,   KC_J,  KC_K,   KC_L,   LT(MDIA, KC_SCLN),GUI_T(KC_QUOT),
-             MEH_T(KC_NO),KC_N,   KC_M,  KC_COMM,KC_DOT, CTL_T(KC_SLSH),   KC_RSFT,
-                                  KC_UP, KC_DOWN,KC_LBRC,KC_RBRC,          KC_FN1,
-             KC_LALT,        CTL_T(KC_ESC),
+             SWITCH_ENGLISH,     KC_6,   KC_7,  KC_8,   KC_9,   KC_0,             KC_MINS,
+             KC_NO,      KC_Y,   KC_U,  KC_I,   KC_O,   KC_P,             KC_BSLS,
+                            KC_H,   KC_J,  KC_K,   KC_L,   LT(MDIA, KC_SCLN),KC_NO,
+             MEH_T(KC_NO),  KC_N,   KC_M,  KC_COMM,KC_DOT, CTL_T(KC_SLSH),   KC_RSFT,
+                                  KC_UP, KC_DOWN,KC_LBRC,KC_RBRC,          KC_RGUI,
+             KC_LALT,        KC_ESC,
              KC_PGUP,
-             KC_PGDN,KC_TAB, KC_ENT
+             MO(SYMB), KC_TAB, KC_ENT
     ),
-/* Keymap 1: Symbol Layer
+/* Keymap 1: Russian Layer - made to replace some things to make it possible to type russian language
  *
  * ,---------------------------------------------------.           ,--------------------------------------------------.
- * |Version  |  F1  |  F2  |  F3  |  F4  |  F5  |      |           |      |  F6  |  F7  |  F8  |  F9  |  F10 |   F11  |
+ * |         |      |      |      |      |      |      |           |      |      |      |      |      |      |        |
  * |---------+------+------+------+------+------+------|           |------+------+------+------+------+------+--------|
- * |         |   !  |   @  |   {  |   }  |   |  |      |           |      |   Up |   7  |   8  |   9  |   *  |   F12  |
+ * |         |      |      |      |      |      |      |           |      |      |      |      |      | p(3) |   [(x) |
  * |---------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
- * |         |   #  |   $  |   (  |   )  |   `  |------|           |------| Down |   4  |   5  |   6  |   +  |        |
+ * |         |      |      |      |      |      |------|           |------|      |      |      |      |  ;   |   '(ee)|
  * |---------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
- * |         |   %  |   ^  |   [  |   ]  |   ~  |      |           |      |   &  |   1  |   2  |   3  |   \  |        |
+ * |  LShift |      |      |      |      |      |      |           |      |      |RSIGNS|      |      |  \   | RShift |
  * `---------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
- *   | EPRM  |      |      |      |      |                                       |      |    . |   0  |   =  |      |
+ *   |       |      |      |      |      |                                       |      |      |      |      |      |
+ *   `-----------------------------------'                                       `----------------------------------'
+ *                                        ,-------------.       ,-------------.
+ *                                        |      |      |       |      |      |
+ *                                 ,------|------|------|       |------+------+------.
+ *                                 |      |      |      |       |      |      |      |
+ *                                 |      |      |------|       |------|      |      |
+ *                                 |      |      |      |       |      |      |      |
+ *                                 `--------------------'       `--------------------'
+ */
+// Russian layout helper
+[RUSSIAN] = LAYOUT_ergodox(
+       // left hand
+       KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,
+       KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,
+       KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,
+       KC_LSFT,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,
+          KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,
+                                       KC_TRNS,KC_TRNS,
+                                               KC_TRNS,
+                               KC_TRNS,KC_TRNS,KC_TRNS,
+       // right hand
+       KC_TRNS, KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,
+       KC_TRNS, KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_P   ,KC_LBRC,
+                KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_SCLN,KC_QUOT,
+       KC_TRNS, KC_TRNS,RSIGNS ,KC_TRNS,KC_TRNS,KC_BSLS,KC_RSFT,
+                        KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,
+       KC_TRNS, KC_TRNS,
+       KC_TRNS,
+       KC_TRNS, KC_TRNS, KC_TRNS
+),
+/* Keymap 1: Symbol Layer 
+ *
+ * ,---------------------------------------------------.           ,--------------------------------------------------.
+ * |         |  f1  |  f2  |  f3  |  f4  |  f5  |  f6  |           |      |  f7  |  f8  |  f9  | f10  |  f11 |  f12   |
+ * |---------+------+------+------+------+------+------|           |------+------+------+------+------+------+--------|
+ * |         |  !   |  @   |  #   |  $   |  %   |      |           |      |  ^   |  &   |   *  |  -   |   +  |        |
+ * |---------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
+ * |         |  <   |  [   |  {   |  (   |  `   |------|           |------| ' "  |  )   |   }  |  ]   |   >  |        |
+ * |---------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
+ * |         |      |      |  ?   |  ~   |      |      |           |      |      |  =   |  /\  |      |      |        |
+ * `---------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
+ *   |       |      |      |      |      |                                       |      |      |      |      |      |
  *   `-----------------------------------'                                       `----------------------------------'
  *                                        ,-------------.       ,-------------.
  *                                        |Animat|      |       |Toggle|Solid |
@@ -79,23 +132,65 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // SYMBOLS
 [SYMB] = LAYOUT_ergodox(
        // left hand
-       VRSN,   KC_F1,  KC_F2,  KC_F3,  KC_F4,  KC_F5,  KC_TRNS,
-       KC_TRNS,KC_EXLM,KC_AT,  KC_LCBR,KC_RCBR,KC_PIPE,KC_TRNS,
-       KC_TRNS,KC_HASH,KC_DLR, KC_LPRN,KC_RPRN,KC_GRV,
-       KC_TRNS,KC_PERC,KC_CIRC,KC_LBRC,KC_RBRC,KC_TILD,KC_TRNS,
+       KC_TRNS,KC_F1,  KC_F2,  KC_F3,  KC_F4,  KC_F5, KC_F6,
+       KC_TRNS,KC_EXLM,KC_AT,  KC_HASH,KC_DLR,KC_PERC,KC_TRNS,
+       KC_TRNS,KC_LABK,KC_LBRC,KC_LCBR,KC_LPRN,KC_GRV,
+       KC_TRNS,KC_TRNS,KC_TRNS,KC_QUES,KC_TILD,KC_TRNS,KC_TRNS,
           EPRM,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,
                                        RGB_MOD,KC_TRNS,
                                                KC_TRNS,
                                RGB_VAD,RGB_VAI,KC_TRNS,
        // right hand
-       KC_TRNS, KC_F6,   KC_F7,  KC_F8,   KC_F9,   KC_F10,  KC_F11,
-       KC_TRNS, KC_UP,   KC_7,   KC_8,    KC_9,    KC_ASTR, KC_F12,
-                KC_DOWN, KC_4,   KC_5,    KC_6,    KC_PLUS, KC_TRNS,
-       KC_TRNS, KC_AMPR, KC_1,   KC_2,    KC_3,    KC_BSLS, KC_TRNS,
-                         KC_TRNS,KC_DOT,  KC_0,    KC_EQL,  KC_TRNS,
+       KC_TRNS, KC_F7,   KC_F8,  KC_F9,   KC_F10,   KC_F11,  KC_F12,
+       KC_TRNS, KC_CIRC,   KC_AMPR,   KC_ASTR,    KC_MINS,    KC_PLUS, KC_TRNS,
+                TD(QUOTES_DBLQUOTES),KC_RPRN,KC_RCBR,KC_RBRC,KC_RABK,KC_TRNS,
+       KC_TRNS, KC_TRNS, TD(SLASH_BACKSLASH),   KC_TRNS,    KC_TRNS,    KC_TRNS, KC_TRNS,
+                         KC_TRNS,KC_TRNS,  KC_TRNS,    KC_TRNS,  KC_TRNS,
        RGB_TOG, RGB_SLD,
        KC_TRNS,
        KC_TRNS, RGB_HUD, RGB_HUI
+),
+
+/* Keymap NAVI: Navigation layer
+ *
+ * ,--------------------------------------------------.           ,--------------------------------------------------.
+ * |        |      |      |      |      |      |      |           |      |      |      |      |      |      |        |
+ * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
+ * |        |      |      |      |      |      |      |           | D <- | Home | pg_dw| pg_up| End  |      | D ->   |
+ * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
+ * |        |      |      |      |      |      |------|           |------| left | down |  up  | right|      |        |
+ * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
+ * |        |      |      |      |      |      |      |           |      |      |      |      |      |      |        |
+ * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
+ *   |      |      |      |      |      |                                       |      |      |      |      |      |
+ *   `----------------------------------'                                       `----------------------------------'
+ *                                        ,-------------.       ,-------------.
+ *                                        |      |      |       |      |      |
+ *                                 ,------|------|------|       |------+------+------.
+ *                                 |      |      |      |       |      |      |      |
+ *                                 |      |      |------|       |------|      |      |
+ *                                 |      |      |      |       |      |      |      |
+ *                                 `--------------------'       `--------------------'
+ */
+// MEDIA AND MOUSE
+[NAVI] = LAYOUT_ergodox(
+       KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+       KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+       KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+       KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+       KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+                                           KC_TRNS, KC_TRNS,
+                                                    KC_TRNS,
+                                  KC_TRNS, KC_TRNS, KC_TRNS,
+    // right hand
+       KC_TRNS,  KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+       KC_TRNS,  KC_HOME, KC_PGDN, KC_PGUP, KC_END, KC_TRNS, KC_TRNS,
+                 KC_LEFT, KC_DOWN, KC_UP  , KC_RIGHT, KC_TRNS, KC_TRNS,
+       KC_TRNS,  KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+                          KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+       KC_TRNS, KC_TRNS,
+       KC_TRNS,
+       KC_TRNS, KC_TRNS, KC_TRNS
 ),
 /* Keymap 2: Media and mouse keys
  *
@@ -141,24 +236,64 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 const uint16_t PROGMEM fn_actions[] = {
-    [1] = ACTION_LAYER_TAP_TOGGLE(SYMB)                // FN1 - Momentary Layer 1 (Symbols)
+    // [1] = ACTION_LAYER_TAP_TOGGLE(SYMB)                // FN1 - Momentary Layer 1 (Symbols)
 };
 
+qk_tap_dance_action_t tap_dance_actions[] = {
+  [QUOTES_DBLQUOTES]  = ACTION_TAP_DANCE_DOUBLE(KC_QUOT, KC_DQUO),
+  [SLASH_BACKSLASH]  = ACTION_TAP_DANCE_DOUBLE(KC_SLSH, KC_BSLS)
+};
+
+
+uint16_t actualKeyPressed = 0;
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  if (record->event.pressed) {
-    switch (keycode) {
-      case EPRM:
-        eeconfig_init();
-        return false;
-      case VRSN:
-        SEND_STRING (QMK_KEYBOARD "/" QMK_KEYMAP " @ " QMK_VERSION);
-        return false;
-      #ifdef RGBLIGHT_ENABLE
-      case RGB_SLD:
+  uint16_t HYPER = MOD_BIT(KC_LSFT) | MOD_BIT(KC_LALT) | MOD_BIT(KC_LCTRL) | MOD_BIT(KC_LGUI);
+  switch (keycode) {
+    case SWITCH_RUSSIAN: {
+      if (!record->event.pressed) {
+        layer_on(RUSSIAN);
+        register_mods(HYPER);
+        register_code(KC_EQL);
+        unregister_code(KC_EQL);
+        unregister_mods(HYPER);
+      }
+      return false;
+    }
+    case SWITCH_ENGLISH: {
+      if (!record->event.pressed) {
+        layer_off(RUSSIAN);
+        register_mods(HYPER);
+        register_code16(ALL_T(KC_MINS));
+        unregister_code16(ALL_T(KC_MINS));
+        unregister_mods(HYPER);
+      }
+
+      return false;
+    }
+    case RSIGNS: {
+      bool isShiftPressed = (keyboard_report->mods & MOD_BIT(KC_LSFT));
+      if (record->event.pressed) {
+        actualKeyPressed = isShiftPressed ? KC_RBRC : KC_M;
+
+        unregister_mods(MOD_BIT(KC_LSFT));
+        register_code(actualKeyPressed);
+        if (isShiftPressed) {
+          register_mods(MOD_BIT(KC_LSFT));
+        }
+      } else {
+        unregister_code(actualKeyPressed);
+      }
+      return false;
+    }
+    // original keystrokes - save for a while
+    #ifdef RGBLIGHT_ENABLE
+    case RGB_SLD:
+      if (record->event.pressed) {
         rgblight_mode(1);
         return false;
-      #endif
-    }
+      }
+    break;
+    #endif
   }
   return true;
 }
