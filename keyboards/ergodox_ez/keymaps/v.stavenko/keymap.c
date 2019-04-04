@@ -14,6 +14,7 @@ enum {
   SLASH_BACKSLASH,
   RUSSIAN_YO_QSTN,
   RUSSIAN_YO_E,
+  RUSSIAN_YO_E_VIM,
   RUSSIAN_HARD_SOFT,
 };
 
@@ -32,7 +33,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * ,----------------------------------------------------.       ,--------------------------------------------------.
  * |   =    |   1  |   2  |   3  |   4  |   5  | SW_RUS |       |  SW_ENG |   6  |   7  |   8  |   9  |   0  |   -    |
  * |--------+------+------+------+------+---------------|       |---------+------+------+------+------+------+--------|
- * | -> MDIA|   Q  |   W  |   E  |   R  |   T  |        |       |         |   Y  |   U  |   I  |   O  |   P  |   \    |
+ * | -> MDIA|   Q  |   W  |   E  |   R  |   T  |   Ё    |       |   ъ     |   Y  |   U  |   I  |   O  |   P  |   \    |
  * |--------+------+------+------+------+------|        |       |         |------+------+------+------+------+--------|
  * | -> NAV |   A  |   S  |   D  |   F  |   G  |--------|       |---------|   H  |   J  |   K  |   L  |; / L2|' / Cmd |
  * |--------+------+------+------+------+------| Hyper  |       |   Meh   |------+------+------+------+------+--------|
@@ -54,7 +55,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [BASE] = LAYOUT_ergodox(  // layer 0 : default
         // left hand
         KC_EQL,         KC_1,         KC_2,   KC_3,   KC_4,   KC_5,   SWITCH_RUSSIAN,
-        MO(MDIA),        KC_Q,         KC_W,   KC_E,   KC_R,   TD(RUSSIAN_YO_E)/*KC_T*/,   KC_NO,
+        MO(MDIA),        KC_Q,         KC_W,   KC_E,   KC_R,   KC_T,   KC_TILD,
         MO(NAVI),        KC_A,         KC_S,   KC_D,   KC_F,   KC_G,
         KC_LSFT,        CTL_T(KC_Z),  KC_X,   KC_C,   KC_V,   KC_B,   ALL_T(KC_NO),
         KC_LGUI,KC_LALT,      KC_NO,  KC_NO, KC_ESC,
@@ -63,9 +64,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                                KC_SPC,KC_BSPC,MO(SYMB),
         // right hand
              SWITCH_ENGLISH,     KC_6,   KC_7,  KC_8,   KC_9,   KC_0,             KC_MINS,
-             KC_NO,      KC_Y,   KC_U,  KC_I,   KC_O,   KC_P,             KC_BSLS,
+             KC_RBRC,      KC_Y,   KC_U,  KC_I,   KC_O,   KC_P,             KC_BSLS,
                             KC_H,   KC_J,  KC_K,   KC_L,   KC_SCLN, KC_QUOT ,
-             MEH_T(KC_NO),  KC_N,   TD(RUSSIAN_HARD_SOFT)/*KC_M*/,  KC_COMM,KC_DOT, CTL_T(KC_SLSH),   KC_RSFT,
+             MEH_T(KC_NO),  KC_N,  KC_M,  KC_COMM,KC_DOT, CTL_T(KC_SLSH),   KC_RSFT,
                                   KC_NO, KC_NO,KC_NO,  KC_RALT,          KC_RGUI,
              KC_LALT,        KC_ESC,
              KC_PGUP,
@@ -76,7 +77,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * ,---------------------------------------------------.           ,--------------------------------------------------.
  * |         |      |      |      |      |      |      |           |      |      |      |      |      |      |        |
  * |---------+------+------+------+------+------+------|           |------+------+------+------+------+------+--------|
- * |         |      |      |      |      |      |      |           |      |      |      |      |      | p(3) |   [(x) |
+ * |         |      |      |      |      |      |  Ё   |           | Ъ    |      |      |      |      | p(3) |   [(x) |
  * |---------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
  * |         |      |      |      |      |      |------|           |------|      |      |      |      |  ;   |   '(ee)|
  * |---------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
@@ -96,7 +97,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [RUSSIAN] = LAYOUT_ergodox(
        // left hand
        KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,
-       KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,
+       KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_BSLS,
        KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,
        KC_LSFT,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,
           KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,
@@ -105,7 +106,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                KC_TRNS,KC_TRNS,KC_TRNS,
        // right hand
        KC_TRNS, KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,
-       KC_TRNS, KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_P   ,KC_LBRC,
+       KC_RBRC, KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_P   ,KC_LBRC,
                 KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_SCLN,KC_QUOT,
        KC_TRNS, KC_TRNS,KC_TRNS /*RSIGNS*/ ,KC_TRNS,KC_TRNS,KC_TRNS /*TD(RUSSIAN_YO_QSTN)*/,KC_RSFT,
                         KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,KC_TRNS,
@@ -249,6 +250,7 @@ qk_tap_dance_action_t tap_dance_actions[] = {
   [SLASH_BACKSLASH]  = ACTION_TAP_DANCE_DOUBLE(KC_SLSH, KC_BSLS),
   [RUSSIAN_YO_QSTN]  = ACTION_TAP_DANCE_DOUBLE(KC_BSLS, KC_SLSH),
   [RUSSIAN_YO_E]  = ACTION_TAP_DANCE_DOUBLE(KC_T, KC_BSLS),
+  [RUSSIAN_YO_E_VIM]  = ACTION_TAP_DANCE_DOUBLE(KC_T, KC_TILD),
   [RUSSIAN_HARD_SOFT]  = ACTION_TAP_DANCE_DOUBLE(KC_M, KC_RBRC)
 };
 
